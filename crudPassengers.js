@@ -94,8 +94,10 @@
 
                     const createdPassengerWithId = await response.json();
                     passengers.push(createdPassengerWithId); // Update frontend state
-                    renderPassengers(); // Re-render UI
-                } catch (error) {
+                    await renderPassengers(); // Re-render UI
+                    // Clear form fields after successful submission
+                    addNewPassengerForm.reset(); // Reset form to initial state
+                    } catch (error) {
                     console.error('Error adding new passenger:', error);
                 }
             });
@@ -124,7 +126,7 @@
 
             // Event listener for form submission to update a passenger
             // Updates a passenger's details using a PUT request and updates the UI accordingly.
-            
+
             updatePassengerForm.addEventListener('submit', async function (event) {
                 event.preventDefault(); // Prevent form submission
 
@@ -159,7 +161,9 @@
                     // Update frontend state or UI
                     const indexToUpdate = passengers.findIndex(passenger => passenger.id === updatedPassengerData.id)
                     passengers.splice(indexToUpdate, 1, updatedPassengerData);
-                    renderPassengers(); // Ensure renderPassengers() completes before continuing
+                    await renderPassengers(); // Ensure renderPassengers() completes before continuing
+                    // Clear form fields after successful submission
+                    updatePassengerForm.reset(); // Reset form to initial state
                 } catch (error) {
                     console.error('Error updating passenger:', error);
                 }
