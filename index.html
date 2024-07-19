@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <style>
+        .box {
+            border: 1px solid;
+            margin: 2px;
+            padding: 14px;
+            color: navy;
+        }
+    </style>
+</head>
+
+<body class="container">
+
+    <div class="box mt-3">
+        <h2>Passenger List:</h2>
+        <br>
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead class="thead-light">
+                    <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Origin</th>
+                        <th>Destination</th>
+                        <th>ID</th>
+                    </tr>
+                </thead>
+                <tbody id="passengers-container">
+                    <!-- Table rows will be dynamically added here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <br>
+    <br>
+    <div class="container">
+        <div class="row justify-content-between mt-2">
+            <div class="col-lg-6 mb-3">
+                <div class="border bg-light box">
+                    <form id="addNewPassengerForm" class="my-2 mx-2">
+                        <h4>Add New Passenger Form</h4>
+                        <br>
+                        <div class="form-group">
+                            <label for="newFirst">First Name:</label>
+                            <input id="newFirst" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label for="newLast">Last Name:</label>
+                            <input id="newLast" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label for="newOrigin">Origin:</label>
+                            <input id="newOrigin" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label for="newDestination">Destination:</label>
+                            <input id="newDestination" class="form-control" />
+                        </div>
+                        <!-- <div class="form-group">
+                            <label for="newId">ID:</label>
+                            <input id="newId" class="form-control" />
+                        </div> -->
+                        <br>
+                        <button type="submit" id="AddNewPassenger" class="btn btn-primary">Add New Passenger</button>
+                    </form>
+                </div>
+            </div>
+            <div class="col-lg-6 mb-3">
+                <div class="border bg-light box">
+                    <form id="updatePassengerForm" class="my-2 mx-2">
+                        <h4>Update Passenger Form</h4>
+                        <br>
+                        <div class="form-group">
+                            <label for="updateFirst">First Name:</label>
+                            <input id="updateFirst" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label for="updateLast">Last Name:</label>
+                            <input id="updateLast" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label for="updateOrigin">Origin:</label>
+                            <input id="updateOrigin" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label for="updateDestination">Destination:</label>
+                            <input id="updateDestination" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label for="updateId">ID:</label>
+                            <input id="updateId" class="form-control" />
+                        </div>
+                        <br>
+                        <button type="submit" id="updatePassenger" class="btn btn-primary">Update Passenger</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="API_KEY.js"></script>
+    <script src="crudPassengers.js"></script>
+    <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.js"></script>
+    </body>
+
+</html>
