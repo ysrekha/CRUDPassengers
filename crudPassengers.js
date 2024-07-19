@@ -18,7 +18,10 @@
 
         async function fetchAndRender() {
             // Fetch the Passengers data from the json-server API
+            // Make a request to an API endpoint using fetch() method.
             const passengersResponse = await fetch(`https://${API_KEY}.mockapi.io/api/v1/passengers`);
+
+            // response.json() takes the JSON string from the API response and converts it into a JavaScript object.
             const passengersData = await passengersResponse.json();
 
             // Saving the data in state
@@ -28,56 +31,58 @@
             renderPassengers();
         }
 
-        const passengersContainer = document.getElementById("passengers-container");
+        const passengersContainer = $('#passengers-container');
 
         // Function to render passengers data into the HTML
         // Dynamically generates HTML table rows to display passengers' information.
         function renderPassengers() {
-            passengersContainer.innerHTML = ""; // Clear previous content
+            passengersContainer.empty(); // Clear previous content
 
-            for (const passenger of passengers) {
-                const tr = document.createElement("tr");
-                // Populate table row with passenger data
-                tr.innerHTML = `
+            $.each(passengers, function(index, passenger) {
+                const tr = $("<tr>");
+        
+                // Populate table row with passenger data using jQuery
+                tr.html(`
                     <td>${passenger.name.firstName}</td>
                     <td>${passenger.name.lastName}</td>
                     <td>${passenger.from}</td>
                     <td>${passenger.to}</td>
                     <td>${passenger.id}</td>
-                    <td><button id="delete-button" class="btn btn-danger">Delete</button></td>
-                `;
-
-                // Event listener for delete button
-                tr.querySelector("#delete-button").addEventListener("click", () => {
+                    <td><button class="delete-button btn btn-danger">Delete</button></td>
+                `);
+        
+                // Event listener for delete button using event delegation
+                tr.find(".delete-button").on("click", function() {
                     deletePassenger(passenger.id); // Call deletePassenger function
                 });
-
-                passengersContainer.appendChild(tr); // Append table row to container
-            }
+        
+                passengersContainer.append(tr); // Append table row to container
+            });
         }
+        
 
         // Initial fetch and render
         // Fetches data when the page loads and renders it initially.
         fetchAndRender();
 
         // Event listener when DOM content is loaded
-        document.addEventListener('DOMContentLoaded', function () {
-            const addNewPassengerForm = document.getElementById('addNewPassengerForm');
-
+        $(document).ready(function() {
+            const addNewPassengerForm = $('#addNewPassengerForm');
+        
             // Event listener for form submission to add new passenger
-            addNewPassengerForm.addEventListener('submit', async function (event) {
+            addNewPassengerForm.on('submit', async function(event) {
                 event.preventDefault(); // Prevent form submission
-
-                // Capture form input values
+        
+                // Capture form input values correctly using .val()
                 const newPassenger = {
                     name: {
-                        firstName: document.getElementById('newFirst').value,
-                        lastName: document.getElementById('newLast').value
+                        firstName: $('#newFirst').val(), // Corrected to use .val()
+                        lastName: $('#newLast').val()   // Corrected to use .val()
                     },
-                    from: document.getElementById('newOrigin').value,
-                    to: document.getElementById('newDestination').value,
+                    from: $('#newOrigin').val(),         // Corrected to use .val()
+                    to: $('#newDestination').val(),      // Corrected to use .val()
                 };
-
+        
                 try {
                     // Send POST request to add new passenger
                     const response = await fetch(`https://${API_KEY}.mockapi.io/api/v1/passengers`, {
@@ -87,21 +92,23 @@
                         },
                         body: JSON.stringify(newPassenger)
                     });
-
+        
                     if (!response.ok) {
                         throw new Error('Failed to add new passenger');
                     }
-
+        
                     const createdPassengerWithId = await response.json();
                     passengers.push(createdPassengerWithId); // Update frontend state
                     await renderPassengers(); // Re-render UI
+                    
                     // Clear form fields after successful submission
-                    addNewPassengerForm.reset(); // Reset form to initial state
-                    } catch (error) {
+                    addNewPassengerForm.trigger('reset'); // Reset form to initial state
+                } catch (error) {
                     console.error('Error adding new passenger:', error);
                 }
             });
         });
+        
 
         // Function to delete a passenger
         // Deletes a passenger from both the backend and frontend states.
@@ -121,26 +128,26 @@
         }
 
         // Event listener when DOM content is loaded
-        document.addEventListener('DOMContentLoaded', function () {
-            const updatePassengerForm = document.getElementById('updatePassengerForm');
-
+        $(document).ready(function() {
+            // Select the update passenger form using jQuery
+            const updatePassengerForm = $('#updatePassengerForm');
+        
             // Event listener for form submission to update a passenger
-            // Updates a passenger's details using a PUT request and updates the UI accordingly.
-
-            updatePassengerForm.addEventListener('submit', async function (event) {
+            // This function updates a passenger's details using a PUT request and updates the UI accordingly.
+            updatePassengerForm.on('submit', async function(event) {
                 event.preventDefault(); // Prevent form submission
-
+        
                 // Capture form input values for updating passenger
                 const updatedPassenger = {
                     name: {
-                        firstName: document.getElementById('updateFirst').value,
-                        lastName: document.getElementById('updateLast').value
+                        firstName: $('#updateFirst').val(), // Use .val() to get input value
+                        lastName: $('#updateLast').val()    // Use .val() to get input value
                     },
-                    from: document.getElementById('updateOrigin').value,
-                    to: document.getElementById('updateDestination').value,
-                    id: document.getElementById('updateId').value
+                    from: $('#updateOrigin').val(),         // Use .val() to get input value
+                    to: $('#updateDestination').val(),      // Use .val() to get input value
+                    id: $('#updateId').val()                // Use .val() to get input value
                 };
-
+        
                 try {
                     // Send PUT request to update passenger
                     const response = await fetch(`https://${API_KEY}.mockapi.io/api/v1/passengers/${updatedPassenger.id}`, {
@@ -150,22 +157,25 @@
                         },
                         body: JSON.stringify(updatedPassenger)
                     });
-
+        
                     if (!response.ok) {
                         throw new Error('Failed to update passenger');
                     }
-
+        
                     // Optionally handle the response data if needed
                     const updatedPassengerData = await response.json();
                     console.log(updatedPassengerData);
+        
                     // Update frontend state or UI
-                    const indexToUpdate = passengers.findIndex(passenger => passenger.id === updatedPassengerData.id)
+                    const indexToUpdate = passengers.findIndex(passenger => passenger.id === updatedPassengerData.id);
                     passengers.splice(indexToUpdate, 1, updatedPassengerData);
                     await renderPassengers(); // Ensure renderPassengers() completes before continuing
+        
                     // Clear form fields after successful submission
-                    updatePassengerForm.reset(); // Reset form to initial state
+                    updatePassengerForm.trigger('reset'); // Reset form to initial state
                 } catch (error) {
                     console.error('Error updating passenger:', error);
                 }
             });
         });
+        
